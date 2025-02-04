@@ -13,6 +13,7 @@ pygame.display.set_caption('Pong')
 # Colores
 white = (255, 255, 0)
 black = (0, 0, 0)
+colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (0, 255, 255), (255, 0, 255)]
 
 class Paddle:
     def __init__(self, x, y):
