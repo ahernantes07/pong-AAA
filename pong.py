@@ -11,7 +11,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Pong')
 
 # Colores
-white = (255, 255, 255)
+white = (255, 255, 0)
 black = (0, 0, 0)
 
 class Paddle:
