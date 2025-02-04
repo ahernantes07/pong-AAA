@@ -84,9 +84,11 @@ class Game:
         if result == 'left':
             self.right_score += 1
             self.ball.reset()
+            self.background_color = random.choice(colors)
         if result == 'right':
             self.left_score += 1
             self.ball.reset()
+            self.background_color = random.choice(colors)
 
         if self.ball.rect.colliderect(self.left_paddle.rect) or self.ball.rect.colliderect(self.right_paddle.rect):
             self.ball.speed_x *= -1
