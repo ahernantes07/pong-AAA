@@ -1,5 +1,6 @@
 import pygame
 import sys
+import random
 
 # Inicializar Pygame
 pygame.init()
@@ -14,6 +15,14 @@ pygame.display.set_caption('Pong')
 white = (255, 255, 0)
 black = (0, 0, 0)
 colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (0, 255, 255), (255, 0, 255)]
+
+# Sonidos
+hit_sound = pygame.mixer.Sound("hit.mp3")
+bouncing_sound=pygame.mixer.Sound("bouncing.mp3")
+player1_sound = pygame.mixer.Sound("player1.mp3")
+player2_sound = pygame.mixer.Sound("player2.mp3")
+pygame.mixer.music.load('chocones.mp3')
+pygame.mixer.music.play(-1)
 
 class Paddle:
     def __init__(self, x, y):
@@ -42,6 +51,7 @@ class Ball:
 
         if self.rect.top <= 0 or self.rect.bottom >= screen_height:
             self.speed_y *= -1
+            pygame.mixer.Sound.play(bouncing_sound)
         if self.rect.left <= 0:
             return 'right'
         if self.rect.right >= screen_width:
@@ -85,13 +95,16 @@ class Game:
             self.right_score += 1
             self.ball.reset()
             self.background_color = random.choice(colors)
+            pygame.mixer.Sound.play(player1_sound)
         if result == 'right':
             self.left_score += 1
             self.ball.reset()
             self.background_color = random.choice(colors)
+            pygame.mixer.Sound.play(player2_sound)
 
         if self.ball.rect.colliderect(self.left_paddle.rect) or self.ball.rect.colliderect(self.right_paddle.rect):
             self.ball.speed_x *= -1
+            pygame.mixer.Sound.play(hit_sound)
 
 # Bucle principal del juego
 game = Game()
