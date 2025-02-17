@@ -73,9 +73,10 @@ class Game:
         self.left_score = 0
         self.right_score = 0
         self.font = pygame.font.Font(None, 74)
+        self.background_color = black
 
     def draw(self):
-        screen.fill(black)
+        screen.fill(self.background_color)
         self.left_paddle.draw()
         self.right_paddle.draw()
         self.ball.draw()
