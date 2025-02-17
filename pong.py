@@ -24,9 +24,13 @@ player2_sound = pygame.mixer.Sound("player2.mp3")
 pygame.mixer.music.load('chocones.mp3')
 pygame.mixer.music.play(-1)
 
+#barras
+paddle_width = 15
+paddle_height = 150
+
 class Paddle:
     def __init__(self, x, y):
-        self.rect = pygame.Rect(x, y, 10, 100)
+        self.rect = pygame.RectRect(x, y, paddle_width, paddle_height)
         self.speed = 10
 
     def move(self, up, down):
@@ -38,7 +42,27 @@ class Paddle:
 
     def draw(self):
         pygame.draw.rect(screen, green, self.rect)
+        
+    def expand(self):
+        self.rect.height -= 20
 
+    def shrink(self):
+        if self.rect.height > 20:
+            self.rect.height += 20
+        if self.rect.height < 20:
+            self.rect.height -20
+    def reset(self):
+        self.rect.center = (screen_width // 2, screen_height // 2)
+        self.speed_x = ball_speed_x * random.choice([-3,-2,-1,1,2,3])
+        self.speed_y = ball_speed_y * random.choice([-3,-2,-1,1,2,3])
+
+    def randomize_direction(self, is_right_paddle_hit):
+        self.speed_x = ball_speed_x * random.choice([-3,-2,-1,1,2,3])
+        self.speed_y = ball_speed_y * random.choice([-3,-2,-1,1,2,3])
+        if is_right_paddle_hit and self.speed_x > 0:
+            self.speed_x *= -1
+        if not is_right_paddle_hit and self.speed_x < 0:
+            self.speed_x *= -1
 class Ball:
     def __init__(self):
         self.rect = pygame.Rect(screen_width // 2 - 10, screen_height // 2 - 10, 20, 20)
