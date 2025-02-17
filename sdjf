@@ -1,0 +1,118 @@
+import pygame
+import random
+
+# Inicializar Pygame
+pygame.init()
+
+# Configuración de la pantalla
+screen_width = 1080
+screen_height = 650
+screen = pygame.display.set_mode((screen_width, screen_height))
+pygame.display.set_caption("Pong")
+
+# Colores
+white = (255, 255, 255)
+black = (0, 0, 0)
+
+# Configuración del juego
+ball_width = 20
+ball_height = 20
+paddle_width = 15
+paddle_height = 150
+paddle_speed = 10
+ball_speed_x = 5
+ball_speed_y = 5
+
+# Clases del juego
+class Paddle:
+    def __init__(self, x, y):
+        self.rect = pygame.Rect(x, y, paddle_width, paddle_height)
+        self.speed = paddle_speed
+
+    def move(self, up, down):
+        keys = pygame.key.get_pressed()
+        if keys[up] and self.rect.top > 0:
+            self.rect.move_ip(0, -self.speed)
+        if keys[down] and self.rect.bottom < screen_height:
+            self.rect.move_ip(0, self.speed)
+
+    def expand(self):
+        self.rect.height -= 20
+
+    def shrink(self):
+        if self.rect.height > 20:
+            self.rect.height += 20
+        if self.rect.height < 20:
+            self.rect.height -20
+
+class Ball:
+    def __init__(self, x, y):
+        self.rect = pygame.Rect(x, y, ball_width, ball_height)
+        self.speed_x = ball_speed_x
+        self.speed_y = ball_speed_y
+
+    def move(self):
+        self.rect.move_ip(self.speed_x, self.speed_y)
+        if self.rect.top <= 0 or self.rect.bottom >= screen_height:
+            self.speed_y *= -1
+
+    def reset(self):
+        self.rect.center = (screen_width // 2, screen_height // 2)
+        self.speed_x = ball_speed_x * random.choice([-3,-2,-1,1,2,3])
+        self.speed_y = ball_speed_y * random.choice([-3,-2,-1,1,2,3])
+
+    def randomize_direction(self, is_right_paddle_hit):
+        self.speed_x = ball_speed_x * random.choice([-3,-2,-1,1,2,3])
+        self.speed_y = ball_speed_y * random.choice([-3,-2,-1,1,2,3])
+        # Asegurarse de que la bola no se mueva hacia la misma dirección
+        if is_right_paddle_hit and self.speed_x > 0:
+            self.speed_x *= -1
+        if not is_right_paddle_hit and self.speed_x < 0:
+            self.speed_x *= -1
+
+# Inicialización de paletas y bola
+player_paddle = Paddle(screen_width - 40, screen_height // 2 - paddle_height // 2)
+opponent_paddle = Paddle(20, screen_height // 2 - paddle_height // 2)
+ball = Ball(screen_width // 2, screen_height // 2)
+
+# Bucle del juego
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+    # Movimiento de las paletas y la bola
+    player_paddle.move(pygame.K_UP, pygame.K_DOWN)
+    opponent_paddle.move(pygame.K_w, pygame.K_s)
+    ball.move()
+
+    # Comprobación de colisiones con las paletas
+    if ball.rect.colliderect(player_paddle.rect):
+        ball.randomize_direction(is_right_paddle_hit=True)
+    elif ball.rect.colliderect(opponent_paddle.rect):
+        ball.randomize_direction(is_right_paddle_hit=False)
+
+    # Comprobación de goles
+    if ball.rect.left <= 0:
+        player_paddle.expand()
+        opponent_paddle.shrink()
+        ball.reset()
+    elif ball.rect.right >= screen_width:
+        opponent_paddle.expand()
+        player_paddle.shrink()
+        ball.reset()
+
+    # Dibujar todo en la pantalla
+    screen.fill(black)
+    pygame.draw.rect(screen, white, player_paddle.rect)
+    pygame.draw.rect(screen, white, opponent_paddle.rect)
+    pygame.draw.ellipse(screen, white, ball.rect)
+    pygame.draw.aaline(screen, white, (screen_width // 2, 0), (screen_width // 2, screen_height))
+
+    # Actualizar la pantalla
+    pygame.display.flip()
+    pygame.time.Clock().tick(60)
+
+# Finalizar Pygame
+pygame.quit()
