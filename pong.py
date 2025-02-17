@@ -12,7 +12,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Pong')
 
 # Colores
-white = (255, 255, 0)
+green = (0,50,0)
 black = (0, 0, 0)
 colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0), (0, 255, 255), (255, 0, 255)]
 
@@ -37,7 +37,7 @@ class Paddle:
             self.rect.y += self.speed
 
     def draw(self):
-        pygame.draw.rect(screen, white, self.rect)
+        pygame.draw.rect(screen, green, self.rect)
 
 class Ball:
     def __init__(self):
@@ -59,7 +59,7 @@ class Ball:
         return None
 
     def draw(self):
-        pygame.draw.ellipse(screen, white, self.rect)
+        pygame.draw.ellipse(screen, green, self.rect)
 
     def reset(self):
         self.rect.x, self.rect.y = screen_width // 2 - 10, screen_height // 2 - 10
@@ -80,11 +80,11 @@ class Game:
         self.left_paddle.draw()
         self.right_paddle.draw()
         self.ball.draw()
-        pygame.draw.aaline(screen, white, (screen_width // 2, 0), (screen_width // 2, screen_height))
+        pygame.draw.aaline(screen, green, (screen_width // 2, 0), (screen_width // 2, screen_height))
 
-        left_text = self.font.render(str(self.left_score), True, white)
+        left_text = self.font.render(str(self.left_score), True, green)
         screen.blit(left_text, (screen_width // 4, 20))
-        right_text = self.font.render(str(self.right_score), True, white)
+        right_text = self.font.render(str(self.right_score), True, green)
         screen.blit(right_text, (screen_width * 3 // 4, 20))
 
     def update(self):
